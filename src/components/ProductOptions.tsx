@@ -27,9 +27,9 @@ export default function ProductOptions({ productName, sizes }: ProductOptionsPro
           </button>
         ))}
       </div>
-      <p className="size-note">Choose your size. Need help? Ask us before confirming your order.</p>
+      <p className="size-note">Choose a standard size. Ask us to confirm availability before ordering.</p>
       <Link className="solid-link product-enquiry-link" href={enquiryHref}>
-        Enquire about this piece <span>↗</span>
+        Ask about availability &amp; delivery <span>↗</span>
       </Link>
     </>
   );

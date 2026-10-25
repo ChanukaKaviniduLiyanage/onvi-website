@@ -74,14 +74,34 @@ All product listing content is maintained in one place: `src/lib/products.ts`. T
 
 To add or update a piece:
 
-1. Put the product image in `public/images/` (use a short, descriptive filename, e.g. `model-new-top.jpg`).
+1. Put each product photo in `public/images/` (use short, descriptive filenames, e.g. `new-top-front.jpg` and `new-top-back.jpg`).
 2. Edit the matching object in `src/lib/products.ts`.
-3. Update `slug` (URL-safe, unique, e.g. `new-everyday-top`), `id`, `name`, `price`, `image` (`/images/model-new-top.jpg`), `alt`, `category`, `description`, `details`, and `sizes`.
-4. Save and restart the dev server if needed. The collection card and matching detail route are generated from this same product record.
+3. Update `slug` (URL-safe and unique), `id`, `name`, `price`, `image`, `alt`, `category`, `description`, `details`, and `sizes`.
+4. Add every product photo to that product's `images` array, in the order you want the thumbnails to appear. Each entry has `src`, `alt`, and `label`. The first image should usually be the primary/front image; keep `image` pointed at that same primary image for collection cards and related products.
+5. Save and restart the dev server if needed. The collection card, thumbnail gallery, and product detail route all read from the same product record.
 
 The `slug` becomes the product URL at `/collection/<slug>`. Keep each slug unique and do not include `/collection/` in the slug itself. Images should be stored in `public/images/`, while the data file should reference them with a leading `/images/`.
 
 ## Recent collection fixes
 
 - Product detail route parameters are awaited using the Next.js 16 route API, preventing valid collection-card links from failing because `params` is asynchronous.
-- Collection listing images now have a desktop hover magnifier interaction. It is disabled on touch/mobile viewports so the mobile experience remains unchanged.
+- Collection listing images have a desktop hover magnifier; the product detail gallery also has a magnifier and clickable image thumbnails. Magnification is disabled on touch/mobile, where the thumbnails remain swipeable.
+- Product gallery photos are managed per product through the `images` array in `src/lib/products.ts`. Current secondary gallery views are close-up crops made from the supplied product photos; replace/add real alternate-angle photos in `public/images/` whenever they are available.
+
+## Managing catalog filters
+
+The Collection page has two filters: occasion and piece type. Both are controlled from `src/lib/products.ts`, and a design can belong to more than one occasion.
+
+1. Edit `occasionCategories` to change the occasion filters, such as Casual, Party, and Corporate.
+2. Edit `productCategories` to change the piece-type filters, such as Tops or Dresses.
+3. Give every product a `category` (piece type) and at least one `occasion`. Add multiple occasion names when they fit the design.
+4. Product cards and product pages display both the occasion tags and piece type.
+
+Example:
+
+```ts
+export const occasionCategories = ["Casual", "Party", "Corporate"] as const;
+export const productCategories = ["Tops", "Dresses", "Pants", "Kidswear"] as const;
+```
+
+Then assign `occasions: ["Casual", "Corporate"]` and `category: "Tops"` to place a design under both occasions and its piece type.
